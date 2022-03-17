@@ -4,6 +4,8 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
 	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 	<title>MrFakeGame</title>
 	<style>
@@ -14,6 +16,8 @@
 			text-align: center;
 			margin: auto;
 			vertical-align: center;
+              touch-action: manipulation;
+
 		}
 
 		.world {
@@ -30,7 +34,7 @@
 			width: 25px;
 			height: 25px;
 			top: 75px;
-			left: 175px;
+			left: 225px;
 			transition: 0.125s;
 		}
 
@@ -54,15 +58,33 @@
 
 		.control-btn button {
 			background-color: white;
-			font-size: 3em;
+			font-size: 1.5em;
+            border-radius: 5px;
+            background-color: darkred;
+            color: white;
+            border: none;
+            margin: 5px;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -apple-user-select: none;
+            -ms-user-select: none;
+            ms-user-select: none;
 		}
-
+        .line {
+            background: black;
+            position: absolute;
+            left: 200px;
+            top: 0px;
+            height: 100%;
+            border-right: 1px solid black;
+        }
 	</style>
 </head>
 
 <body>
 	<h1>MrFakeGame</h1>
-	<h3>Try to hit the red dot using WASD or the arrow keys! Send a projectile with the space key! Get 750 points to win in less than 45 seconds!</h3>
+	<h3>Try to hit the red dot using WASD or the arrow keys! Send a projectile with the space key! Get 750 points to win in less than 45 seconds! The enemy will stay on the left of the dividing line, and the player will stay on the right.</h3>
 	<h2>
 		<span id="points">0</span>/750 points!
 		<span style="color: lightcoral;">
@@ -76,11 +98,22 @@
 		<h3>JavaScript is required to play MrFakeGame.</h3>
 	</noscript>
 	<div class="world" id="world">
+        <div class="line"></div>
 		<img src="dot.png" alt="•" class="self player" draggable="false" id="player" />
 		<img src="dot.png" alt="*" class="projectile box" draggable="false" id="p" />
 		<div class="enemy box" id="enemy1"></div>
 	</div>
-
+    <div class="control-btn">
+        <button onclick="send()">SEND PROJECTILE</button>
+        <br>
+        <button onmousedown="ups()" onmouseup="upe()" ontouchdown="ups()" ontouchup="upe()" onclick="up()">UP</button>
+        <br>
+        <!--FN NAME + s (start) | e (end) () e.g. downs() and downe() for down start and down end-->
+        <button onmousedown="downs()" onmouseup="downe()" ontouchdown="downs()" ontouchup="downe()" onclick="down()">DOWN</button>
+        <br>
+        <button onmousedown="lefts()" onmouseup="lefte()" ontouchdown="lefts()" ontouchup="lefte()" onclick="left()">LEFT</button>
+        <button onmousedown="rights()" onmouseup="righte()" ontouchdown="rights()" ontouchup="righte()" onclick="right()">RIGHT</button>
+    </div>
 	<script>
 		var times = 0;
 		var boxes = document.querySelectorAll(".box");
@@ -187,7 +220,7 @@
 			return !(d1Top < d2Offset.top || d1Offset.top > d2Top || d1Left < d2Offset.left || d1Offset.left > d2Left);
 		}
 
-		var leftn = 175;
+		var leftn = 225;
 		var topn = 75;
 		var p = document.getElementById("player");
 		var world = document.getElementById("world");
@@ -196,44 +229,80 @@
 		var e1left = 30;
 		var e1top = 80;
 		var e1 = document.getElementById("enemy1");
-
-		window.onkeydown = function(e) {
-			if (e.keyCode == 38 || e.keyCode == 87) {
-				if (topn <= 0) {
+        //Interval (settimeout, setinterval) - Direction + t (timeout) e.g. leftt for left timeout.
+        var leftt;
+        var rightt;
+        var downt;
+        var upt;
+        //ms = M ovement S peed (movement speed in ms)
+        var ms = 100;
+        function ups() {
+            upt = setInterval(function() {
+                up()
+            }, ms);
+        }
+        function upe() {
+            clearInterval(upt);
+        }
+        function downs() {
+            downt = setInterval(function() {
+                down()
+            }, ms);
+        }
+        function downe() {
+            clearInterval(downt);
+        }
+        function lefts() {
+            leftt = setInterval(function() {
+                left()
+            }, ms);
+        }
+        function lefte() {
+            clearInterval(leftt);
+        }
+        function rights() {
+            rightt = setInterval(function() {
+                right()
+            }, ms);
+        }
+        function righte() {
+            clearInterval(rightt);
+        }
+function up() {
+    if (topn <= 0) {
 					topn = 0;
 				} else {
 					topn -= 5;
 				}
 				p.style.top = topn + "px";
-			}
-			if (e.keyCode == 40 || e.keyCode == 83) {
-				if (topn >= 175) {
+}
+function down() {
+    if (topn >= 175) {
 					topn = 175;
 				} else {
 					topn += 5;
 				}
 				p.style.top = topn + "px";
-			}
-			if (e.keyCode == 37 || e.keyCode == 65) {
-				if (leftn <= 0) {
-					leftn = 0;
+}
+function left() {
+    if (leftn <= 200) {
+					leftn = 200;
 				} else {
 					leftn -= 5;
 				}
 				p.style.left = leftn + "px";
-			}
-			if (e.keyCode == 39 || e.keyCode == 68) {
-				if (leftn >= 375) {
+}
+function right() {
+    if (leftn >= 375) {
 					leftn = 375;
 				} else {
 					leftn += 5;
 				}
 				p.style.left = leftn + "px";
-			}
-
-			if (e.keyCode == 32) {
-				if (projactive == false) {
-					var leftn2 = leftn - 1;
+}
+function send() {
+    if (projactive == false) {
+					var leftn2 = leftn - 2;
 					var r = document.getElementById("p");
 					r.style.opacity = "100%";
 					r.style.top = topn + "px";
@@ -249,8 +318,25 @@
 							projactive = false;
 							r.style.opacity = "0%";
 						}
-					}, 0.125);
+					}, 0.001);
 				}
+}
+		window.onkeydown = function(e) {
+			if (e.keyCode == 38 || e.keyCode == 87) {
+				up()
+			}
+			if (e.keyCode == 40 || e.keyCode == 83) {
+				down()
+			}
+			if (e.keyCode == 37 || e.keyCode == 65) {
+				left()
+			}
+			if (e.keyCode == 39 || e.keyCode == 68) {
+				right()
+			}
+
+			if (e.keyCode == 32) {
+				send()
 			}
 		};
 
@@ -260,10 +346,10 @@
 			return Math.floor(Math.random() * (max - min + 1)) + min;
 		}
 		setInterval(function() {
-			e1left = randNum(e1left - 10, e1left + 10);
-			e1top = randNum(e1top - 10, e1top + 10);
-			if (e1left > 400) {
-				e1left = 390;
+			e1left = randNum(e1left - 15, e1left + 15);
+			e1top = randNum(e1top - 15, e1top + 15);
+			if (e1left > 160) {
+				e1left = 150;
 			} else if (e1left < 0) {
 				e1left = 10;
 			}
