@@ -7,4 +7,4 @@ An online version is available [here](https://mrfake.name/mrfakegame/).
 
 Please see the CREDITS.txt file.
 
-**_MrFakeGame does not work on mobile devices at this moment. We're looking forward to creating a version that supports mobile devices. If you find a way to do this, please do not hesitate to create a pull request._**
+MrFakeGame now supports mobile devices as of version 1.0.1!
