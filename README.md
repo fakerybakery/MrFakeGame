@@ -10,7 +10,7 @@ Please see the CREDITS.txt file.
 MrFakeGame now supports mobile devices as of version 1.0.1!
 
 ## Credits
-Please see CREDITS.txt file.
+Please see `CREDITS.txt` file.
 
 Created by mrfakename (https://mrfake.name). &copy;2022. All rights reserved.
 
